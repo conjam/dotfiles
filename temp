@@ -1,0 +1,19 @@
+execute pathogen#infect()
+syntax on
+colorscheme badwolf
+set tabstop=4
+set softtabstop=4
+set expandtab
+set number
+set showcmd
+set showmatch
+set incsearch
+set autoindent
+set ruler 
+set incsearch
+imap kj <Esc>
+imap jk <Esc>
+noremap # ^
+map <C-n> :NERDTreeToggle<CR>
+set backspace=indent,eol,start
+
