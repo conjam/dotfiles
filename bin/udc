@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+GDIR="$(git rev-parse --show-toplevel 2>/dev/null)"
+tags_file="${GDIR}/.git/tags"
+# Remove the old tags file if it exists.
+if [ -z $GDIR ]; then
+    exit 1
+fi
+
+
+ctags -R -f $GDIR/.git/new_tags $GDIR/* #We don't want to delete old tagsyet
+mv $GDIR/.git/new_tags $GDIR/.git/tags
+
