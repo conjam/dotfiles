@@ -122,13 +122,12 @@ nnoremap <Enter> :
 " ====================
 runtime ~/.vim                  " Pointer to .vim directory
 syntax on                       " Enable syntax highlighting
-set t_Co=256                    " Terminal supports 256 colors
 set encoding=utf-8              " Set Vim character encoding to UTF-8
 set termencoding=utf-8
 set fileencoding=utf-8
 scriptencoding utf-8            " Specify script character encoding to UTF-8
 set guifont=consolas            " Favorite font
-silent! colorscheme badwolf     " Best color
+silent! colorscheme elda " Best color
 
 
 " --- Display Settings ---
@@ -176,7 +175,7 @@ augroup Generic
 
     " Automatically regen ctags on each buffer write
     " TODO: DISABLE THIS! This was just a little fun idea
-    autocmd BufWritePost * silent !udc
+    "autocmd BufWritePost * silent !udc
 	" Disable syntax for large files
 	"autocmd BufReadPre * if getfsize(expand("%")) > 10000000 | syntax off | endif
 
@@ -208,4 +207,9 @@ nnoremap <Leader>w :w!<Enter>
 nnoremap <Leader>q :q!<Enter>
 nnoremap <Leader>x :x!<Enter>
 nnoremap <Leader>z :x!<Enter>
+"Paste from system clipboard
+noremap <Leader>y "*y
+noremap <Leader>p "*p
+noremap <Leader>Y "+y
+noremap <Leader>P "+p
 
