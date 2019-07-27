@@ -7,7 +7,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="agnoster"
+ZSH_THEME="3den"
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -67,18 +67,16 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 alias duck="sudo du -a / 2>/dev/null | sort -n -r | head -n 50"
-export XILINXD_LICENSE_FILE=2210@license18.engin.umich.edu
-
 alias src=source
 alias zshrc="source ~/.zshrc"
 alias fdl="sudo fdisk -l"
 
 
 
-export PATH="$HOME/esp/xtensa-esp32-elf/bin:$PATH"
-export PATH="$HOME/Downloads/rvt/bin:$PATH"
-source ~/.local_alias
-
+alias fzsh="git config --add oh-my-zsh.hide-status 1"
+alias ctags="/usr/local/opt/universal-ctags/bin/ctags"
+alias vim="nvim"
+alias gw="cd $ROOT"
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -109,7 +107,18 @@ source ~/.local_alias
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 
+cdf() {
+   local file
+   local dir
+   file=$(find "$ROOT" | fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+   zle reset-prompt 
+ }
+
+zle -N cdf 
 
 
+bindkey ^f cdf
 
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source ~/.zsh-interactive-cd.plugin.zsh
