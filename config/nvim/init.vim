@@ -42,7 +42,7 @@ call plug#begin('~/.vim/vim-plug')
     Plug 'vim-airline/vim-airline-themes'           "themes for above
     Plug 'octol/vim-cpp-enhanced-highlight'         "CPP highlight but better
     Plug 'morhetz/gruvbox'                          "Pretty colors
-
+    Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh \| UpdateRemotePlugins' }
 
 " --- Plugins on trial ---
     Plug 'Shougo/denite.nvim'                       "Nice mappings
@@ -55,13 +55,11 @@ call plug#begin('~/.vim/vim-plug')
     Plug 'Shougo/unite.vim'
 
 
-
-
-
-
-
-
 call plug#end()
+
+
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 
 
 map <C-n> :NERDTreeToggle<CR>
@@ -130,24 +128,6 @@ let g:mapleader="\<space>"
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 " ====================
 "    BEAUTIFICATION
 " ====================
@@ -205,7 +185,7 @@ augroup Generic
 
 	" Automatically add +x permissions
 	autocmd BufWritePost * if getline(1) =~ "^#!.*/bin/" | silent execute "!chmod +x %" | endif
-
+  autocmd BufRead call CloseNoNames
     " Automatically regen ctags on each buffer write
     " TODO: DISABLE THIS! This was just a little fun idea
     "autocmd BufWritePost * silent !udc
@@ -227,10 +207,47 @@ map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-l> <C-W>l
 map <C-h> <C-W>h
+map <C-E> <C-W>_
+map <C-e> <C-W>=
 set hidden
 
 
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" closes current tab and all empty tabs 
+function! CleanTabs()
+  let [i, n; empty] = [1, bufnr('$')]
+  while i <= n
+    if bufexists(i) && bufname(i) == ''
+      call add(empty, i)
+    endif
+    let i += 1
+  endwhile
+  if len(empty) > 0
+    exe 'bwipeout!' join(empty)
+  endif
+endfunction
+
+
+
+
+
+let g:python3_host_prog = '/usr/local/bin/python3'
 
 " =======================
 "    GENERAL SHORTCUTS
@@ -252,5 +269,7 @@ noremap <Leader>y "*y
 noremap <Leader>p "*p
 noremap <Leader>Y "+y
 noremap <Leader>P "+p
+noremap <Leader>k  :GdbStartPDB python -m pdb %
+nnoremap <Leader>g :let @*='b ' . expand('%:p') . ":" .line('.')<CR>
 autocmd Filetype python nnoremap <buffer> <Leader>r :term python %<CR>
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
