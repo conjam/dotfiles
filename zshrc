@@ -72,10 +72,12 @@ alias zshrc="source ~/.zshrc"
 alias fdl="sudo fdisk -l"
 
 
-
 alias fzsh="git config --add oh-my-zsh.hide-status 1"
 alias ctags="/usr/local/opt/universal-ctags/bin/ctags"
 alias vim="nvim"
+alias uwt="find $ROOT/src/hardware -name \"*.sv\" | xargs ctags -f $ROOT/tags -L-"
+alias gtk="/Users/james/Downloads/gtkwave.app/Contents/Resources/bin/gtkwave"
+
 alias gw="cd $ROOT"
 # User configuration
 
@@ -107,6 +109,36 @@ alias gw="cd $ROOT"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 
+## >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/james/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/james/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/james/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/james/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+
+export ANACONDA_PATH="/Users/james/miniconda3"
+
+PATH="/Users/james/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/Users/james/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/james/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/james/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/james/perl5"; export PERL_MM_OPT;
+export SAVE_VERLIATE="Darwin"
+export SAVE_VERILATE_DEBUG=2
+export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
+
+
+export ROOT="/Users/james/work/tensix"
 cdf() {
    local file
    local dir
@@ -122,3 +154,33 @@ bindkey ^f cdf
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source ~/.zsh-interactive-cd.plugin.zsh
+
+fpath=(~/.zsh $fpath)
+
+bindkey -v
+export KEYTIMEOUT=10
+bindkey -M viins 'jk' vi-cmd-mode  # @todo - THIS DOES NOT WORK?
+bindkey -M viins 'kj' vi-cmd-mode
+bindkey -M viins '^k' kill-line
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+bindkey '^r' history-incremental-search-backward
+
+# show which vim mode we are in
+precmd() {
+  RPROMPT=""
+}
+zle-keymap-select() {
+  RPROMPT=""
+  [[ $KEYMAP = vicmd ]] && RPROMPT="(COMMAND MODE)"
+  () { return $__prompt_status }
+  zle reset-prompt
+}
+zle-line-init() {
+  typeset -g __prompt_status="$?"
+}
+zle -N zle-keymap-select
+zle -N zle-line-init
+
+
